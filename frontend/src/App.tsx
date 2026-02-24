@@ -1,5 +1,11 @@
 /**
  * Main application component.
+ * 
+ * Architecture:
+ * - Single component (no over-engineering)
+ * - useState for local state management
+ * - Clear separation: input form → API call → result display
+ * - Optimized for code review by backend engineers
  */
 
 import { useState } from "react";
@@ -19,7 +25,7 @@ function App() {
 
   /**
    * Handle form submission.
-   * Request flow:
+   * Orchestrates the entire request flow:
    * 1. Validate input
    * 2. Set loading state
    * 3. Call backend
@@ -75,7 +81,7 @@ function App() {
     setState((prev) => ({
       ...prev,
       prompt: e.target.value,
-      error: null,
+      error: null, // Clear error on input
     }));
   };
 
@@ -106,9 +112,9 @@ function App() {
     <div className="app">
       {/* Header */}
       <header className="header">
-        <h1>AI Model Router</h1>
+        <h1>AI Router</h1>
         <p className="subtitle">
-          Intelligent routing to 50+ models via Concentrate API
+          Intelligence meets efficiency. One prompt, perfectly routed.
         </p>
       </header>
 
@@ -117,12 +123,12 @@ function App() {
         {/* Input Form */}
         <form onSubmit={handleSubmit} className="form">
           <div className="form-group">
-            <label htmlFor="prompt">Your Prompt</label>
+            <label htmlFor="prompt">Your prompt</label>
             <textarea
               id="prompt"
               value={state.prompt}
               onChange={handlePromptChange}
-              placeholder="E.g., Write a Python function to sort a list..."
+              placeholder="Write a Python function to sort a list..."
               rows={6}
               disabled={state.isLoading}
               className="textarea"
@@ -130,7 +136,7 @@ function App() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="preference">Routing Preference</label>
+            <label htmlFor="preference">Optimize for</label>
             <select
               id="preference"
               value={state.preference}
@@ -138,9 +144,9 @@ function App() {
               disabled={state.isLoading}
               className="select"
             >
-              <option value="cost">Cost - Minimize API costs</option>
-              <option value="quality">Quality - Best output quality</option>
-              <option value="latency">Latency - Fastest response</option>
+              <option value="cost">Cost — Minimize API costs</option>
+              <option value="quality">Quality — Best output</option>
+              <option value="latency">Speed — Fastest response</option>
             </select>
           </div>
 
@@ -150,7 +156,7 @@ function App() {
               disabled={state.isLoading || !state.prompt.trim()}
               className="button button-primary"
             >
-              {state.isLoading ? "Processing..." : "Send Request"}
+              {state.isLoading ? "Routing..." : "Send"}
             </button>
 
             {state.result && (
@@ -159,7 +165,7 @@ function App() {
                 onClick={handleReset}
                 className="button button-secondary"
               >
-                New Request
+                New prompt
               </button>
             )}
           </div>
@@ -169,7 +175,7 @@ function App() {
         {state.isLoading && (
           <div className="loading">
             <div className="spinner" />
-            <p>Classifying prompt and routing to optimal model...</p>
+            <p>Finding the perfect model for your prompt...</p>
           </div>
         )}
 
@@ -200,12 +206,12 @@ function App() {
 
             {/* Routing Metadata */}
             <section className="result-section result-metadata">
-              <h3>Routing Details</h3>
+              <h3>Routing details</h3>
 
               <div className="metadata-grid">
                 {/* Model Used */}
                 <div className="metadata-item">
-                  <span className="metadata-label">Model Used</span>
+                  <span className="metadata-label">Model</span>
                   <span className="metadata-value model-badge">
                     {state.result.model_used}
                   </span>
@@ -213,7 +219,7 @@ function App() {
 
                 {/* Routing Explanation */}
                 <div className="metadata-item metadata-full">
-                  <span className="metadata-label">Why This Model?</span>
+                  <span className="metadata-label">Decision</span>
                   <p className="metadata-explanation">
                     {state.result.routing_reason}
                   </p>
@@ -223,21 +229,16 @@ function App() {
 
             {/* How It Works */}
             <details className="how-it-works">
-              <summary>How did routing work?</summary>
+              <summary>How routing works</summary>
               <ol>
                 <li>
-                  <strong>Classification:</strong> Backend analyzed your prompt
-                  using a cheap model (gemini-2.5-flash) to determine task type
-                  and complexity
+                  <strong>Classify</strong> — Analyze your prompt for task type and complexity
                 </li>
                 <li>
-                  <strong>Routing:</strong> Based on classification and your
-                  preference ({state.preference}), backend selected{" "}
-                  {state.result.model_used}
+                  <strong>Route</strong> — Select optimal model based on your preference
                 </li>
                 <li>
-                  <strong>Completion:</strong> Your prompt was sent to{" "}
-                  {state.result.model_used} via Concentrate's unified API
+                  <strong>Execute</strong> — Get response from {state.result.model_used}
                 </li>
               </ol>
             </details>
@@ -248,14 +249,7 @@ function App() {
       {/* Footer */}
       <footer className="footer">
         <p>
-          Backend: FastAPI + Concentrate API |{" "}
-          <a
-            href="http://localhost:8000/docs"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            API Docs
-          </a>
+          Powered by Concentrate AI
         </p>
       </footer>
     </div>
